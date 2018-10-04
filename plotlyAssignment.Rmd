@@ -1,0 +1,59 @@
+---
+title: "Week 3: Plotly"
+author: "Petra Stone"
+date: "October 4, 2018"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Irish Air Passengers
+
+```{r planes, echo = F, warning=F, message=F}
+
+library(plotly)
+library(pxR)
+library(ggplot2)
+library(dplyr)
+
+# load air passenger data
+myPXData <- as.data.frame(read.px("/Users/petra/Desktop/courserastuff/gitstuff/developingdataproducts/TAQ01.px"))
+
+myPXDataSummary <- myPXData %>% 
+    filter(Statistic=='Passengers (Number)', `Airports.in.Ireland`!='All main airports') %>% 
+    group_by(Quarter, `Airports.in.Ireland`) %>% 
+    summarise(TotalPassengers=sum(value) ) %>% 
+    mutate(PerCPassengers=TotalPassengers/sum(TotalPassengers))
+
+p <- ggplot(
+    #myPXData %>% filter(Statistic=='Passengers (Number)'),
+    myPXDataSummary,
+    aes(y=PerCPassengers,
+        x=Quarter,
+        fill=reorder(`Airports.in.Ireland`, -PerCPassengers),
+        text=paste0(
+            '<b>',`Airports.in.Ireland`, ' Airport</b><br>',
+            Quarter, '<br>',
+            scales::percent(PerCPassengers), ' ', scales::comma(TotalPassengers)
+        )
+        #group=`Airports.in.Ireland`
+    )
+) +
+    #geom_point() +
+    #geom_line() +
+    geom_bar(stat='identity') +
+    #facet_grid(~`Airports.in.Ireland`) +
+    scale_y_continuous(labels = scales::percent) +
+    scale_fill_brewer(palette = "Greens", direction=-1) +
+    ylab('Passengers %') + xlab('') +
+    theme_classic() +
+    theme(legend.position="bottom", axis.text.x = element_text(angle = 50, hjust = 1) ) +
+    labs(fill = "Airport")
+
+ggplotly(p, tooltip = c('text')) %>% layout(margin = list(b = 90))
+
+#plot_ly(z = ~volcano)
+
+```
