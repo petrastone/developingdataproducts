@@ -18,6 +18,8 @@ library(pxR)
 library(ggplot2)
 library(dplyr)
 
+# https://petrastone.github.io/developingdataproducts/plotlyAssignment.html#2
+
 # load air passenger data
 myPXData <- as.data.frame(read.px("/Users/petra/Desktop/courserastuff/gitstuff/developingdataproducts/TAQ01.px"))
 
