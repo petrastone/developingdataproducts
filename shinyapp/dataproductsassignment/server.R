@@ -1,6 +1,6 @@
 #
 # https://petrastone.shinyapps.io/religionireland/
-#
+# https://github.com/petrastone/developingdataproducts/tree/master/shinyapp/dataproductsassignment
 
 shinyServer(function(input, output, session) {
     
@@ -54,6 +54,7 @@ shinyServer(function(input, output, session) {
         
         print( str(finalData))
         
+        #browser()
         return(finalData %>% droplevels())
 
     }
